@@ -91,7 +91,7 @@ class User
     {
         $result = $conn->prepare("INSERT users (firstname, lastname, date_of_birth,  sex, city) 
                             VALUES (:firstname, :lastname, :date_of_birth, :sex, :city)");
-        // $result->bindParam(":id", $id, PDO::PARAM_INT);
+
         $result->bindParam(":firstname", $firstname, PDO::PARAM_STR, 30);
         $result->bindParam(":lastname", $lastname, PDO::PARAM_STR, 30);
         $result->bindParam(":date_of_birth", $dateOfBirth, PDO::PARAM_STR, 30);
@@ -133,7 +133,7 @@ class User
         $user->id = $this->id;
         $user->firstname = $this->firstname;
         $user->lastname = $this->lastname;
-        echo '<br>' . 'Вывод в форматировании ' . $this->dateOfBirth . ' '. $this->sex;
+
         if ($dateOfBirth)
             $user->age = self::age($this->dateOfBirth);
         else

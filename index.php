@@ -3,7 +3,7 @@ require_once 'User.php';
 require_once 'People.php';
 
 try {
-    // БД
+
     $conn = new PDO("mysql:host=localhost", "root", "");
 
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -31,22 +31,23 @@ try {
     $sex = 0;
     echo '<br>' . 'Пол цифрой: ' . $sex . '. Пол текстом: ' . ($Ivan::sexTransformation($sex));
 
-    $Ivan->userFormatting();
-    var_dump($Anna->userFormatting(true, true));
+    $formAnna = $Anna->userFormatting(true, true);
+    var_dump($formAnna);
 
 
-    $objPeople = new People($conn);
+    $objPeople = new People(2, '>=', $conn);
 
-    // выведу всех юзеров
     echo '<br>' . "Вывод списка всех пользоватей для задания 2" . '<br>';
+
     $arrIdUsers = $objPeople->getPeople($conn);
-    foreach ($arrIdUsers as $user) {
-        echo $user->id . ' ' . $user->getFirstname() . ' ' . $user->getLastname() . '<br>';
+    if ($arrIdUsers) {
+        foreach ($arrIdUsers as $user) {
+            echo $user->id . ' ' . $user->getFirstname() . ' ' . $user->getLastname() . '<br>';
+        }
     }
 
-    // удаление всех юзеров
+    // удаление всех юзеров из массива
     //$objPeople->delAllUsers($conn);
-
 
 } catch (PDOException $exception) {
     echo "Database error: " . $exception->getMessage();

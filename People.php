@@ -16,18 +16,26 @@ if (class_exists("User")) {
     {
         private $people = [];
 
-        public function __construct($conn)
+        public function __construct($id, $sign, $conn)
         {
-            $result = $this->getAllUserId($conn);
+            $sql = "SELECT * FROM users
+        WHERE concat(`id`,`firstname`, `lastname`)" . ' ' . $sign . ' ' . $id;
 
-            while ($row = $result->fetch()) {
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetchAll();
+
+            foreach ($result as $row){
                 $this->people[] = $row["id"];
             }
-
         }
 
         public function getPeople($conn)
         {
+            if (!count($this->people)){
+                return null;
+            }
+
             $sql = "SELECT * FROM users
         WHERE id IN (" . implode(",", $this->people) . ")";
             $stmt = $conn->prepare($sql);
@@ -43,14 +51,6 @@ if (class_exists("User")) {
             }
 
             return $arrObj;
-        }
-
-        public function getAllUserId($conn)
-        {
-            $sql = "SELECT * FROM users";
-            $result = $conn->query($sql);
-
-            return $result;
         }
 
         public function delAllUsers($conn)
